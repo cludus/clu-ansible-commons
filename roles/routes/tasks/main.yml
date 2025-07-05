@@ -1,0 +1,25 @@
+
+- name: enable service staticroute
+  ansible.builtin.service:
+    name: staticroute
+    enabled: yes
+
+- name: adding config routes script
+  template:
+    dest: /etc/route.conf
+    src: route.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
+  register: routescfg
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: unconditionally reboot the machine with all defaults
+  ansible.builtin.reboot:
+  when: routescfg.changed
+
+- name: enable service staticroute
+  ansible.builtin.service:
+    name: staticroute
+    enabled: yes
+    state: restarted

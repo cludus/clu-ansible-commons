@@ -1,0 +1,50 @@
+- name: enable ip forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: install wireguard
+  ansible.builtin.package:
+    name:
+      - wireguard-tools
+    update_cache: true
+    state: latest
+
+- name: create server wireguard config
+  template:
+    dest: /etc/wireguard/{{ hostvars[inventory_hostname].vpn.name }}.conf
+    src: wg.conf.j2
+    owner: root
+    group: root
+    mode: '0600'
+  register: wgconfig
+
+- name: start service
+  ansible.builtin.service:
+    name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    enabled: yes
+    state: stopped
+  when: wgconfig.changed
+
+- name: create server wireguard config
+  template:
+    dest: /etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    src: wg-quick.j2
+    owner: root
+    group: root
+    mode: '0700'
+  register: wgrcservice
+
+- name: start service
+  ansible.builtin.service:
+    name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    enabled: yes
+    state: started
+  when: wgconfig.changed
+
+#- name: unconditionally reboot the machine with all defaults
+#  ansible.builtin.reboot:
+#  when: wgconfig.changed

@@ -1,0 +1,58 @@
+
+- name: enable ip forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: install frr
+  community.general.apk:
+    name: frr
+  become: true
+
+- name: disable service frr
+  become: true
+  ansible.builtin.service:
+    name: frr
+    enabled: yes
+    state: stopped
+
+- name: adding daemons
+  template:
+    dest: /etc/frr/daemons
+    src: daemons.j2
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: adding zebra
+  template:
+    dest: /etc/frr/zebra.conf
+    src: zebra.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: adding ospfd
+  template:
+    dest: /etc/frr/ospfd.conf
+    src: ospfd.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: adding staticd
+  template:
+    dest: /etc/frr/staticd.conf
+    src: staticd.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: restart service frr
+  ansible.builtin.service:
+    name: frr
+    enabled: yes
+    state: restarted

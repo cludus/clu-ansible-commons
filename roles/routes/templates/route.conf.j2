@@ -1,0 +1,5 @@
+{% if hostvars[inventory_hostname].routes is defined %}
+{% for rt in hostvars[inventory_hostname].routes %}
+net {{ rt.net }} netmask {{ rt.mask }} gw {{ rt.next_hop }}
+{% endfor %}
+{% endif %}
