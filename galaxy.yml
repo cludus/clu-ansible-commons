@@ -1,0 +1,12 @@
+---
+authors:
+  - Cludus Dev Team
+license_file: LICENSE
+name: cludus-roles
+tags: [routing, networking, facts, frr]
+namespace: cludus
+readme: README.md
+description: Ansible Collection for Cludus setup
+repository: https://github.com/cludus/clu-ansible-roles
+issues: https://github.com/cludus/clu-ansible-roles/issues
+version: "0.1-dev"
