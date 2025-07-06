@@ -1,6 +1,6 @@
-# clu-ansible-roles
+# Cludus commons ansible roles
 
-Ansible roles used in cludus
+Ansible roles used in cludus for network and virtualization configurations
 
 # Setup
 
@@ -31,7 +31,7 @@ then install it by using
 
 # Usage
 
-Here is a simple play book using some roles
+Here is a simple playbook using some roles
     
     - name: update routers
       gather_facts: true
