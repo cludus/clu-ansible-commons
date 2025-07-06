@@ -37,7 +37,7 @@ Here is a simple play book using some roles
       gather_facts: true
       hosts: routers
       become: true
-      old-roles:
+      roles:
         - role: cludus.commons.dns
         - role: cludus.commons.router
     
@@ -45,7 +45,7 @@ Here is a simple play book using some roles
       gather_facts: true
       hosts: pcs
       become: true
-      old-roles:
+      roles:
         - role: cludus.commons.dns
         - role: cludus.commons.routes
     
@@ -65,14 +65,12 @@ All the parameters for the roles can be provided in the inventory, we recommend 
       hosts:
         pc-a1:
           ansible_host: 192.168.22.100
-          ansible_user: vagrant
           routes:
             - net: 10.22.0.0
               mask: 255.255.0.0
               next_hop: 10.22.2.2
         pc-b1:
           ansible_host: 192.168.22.101
-          ansible_user: vagrant
           routes:
             - net: 10.22.0.0
               mask: 255.255.0.0
@@ -81,30 +79,23 @@ All the parameters for the roles can be provided in the inventory, we recommend 
       hosts:
         r-a1:
           ansible_host: 192.168.22.104
-          ansible_user: vagrant
           networks:
             - ip: 10.22.2.1
               suffix: 24
             - ip: 10.22.10.5
               suffix: 30
-            - ip: 10.22.10.17
-              suffix: 30
         r-a2:
           ansible_host: 192.168.22.105
-          ansible_user: vagrant
           networks:
             - ip: 10.22.10.6
               suffix: 30
             - ip: 10.22.10.21
-              suffix: 30
-            - ip: 10.22.10.25
               suffix: 30
     
     vpns:
       hosts:
         vpn1:
           ansible_host: 192.168.22.112
-          ansible_user: vagrant
           routes:
             - net: 10.22.0.0
               mask: 255.255.0.0
@@ -114,14 +105,12 @@ All the parameters for the roles can be provided in the inventory, we recommend 
             address: 10.9.0.2/32
             endpoint: 10.22.2.11
             listening_port: 36582
-            private_key: +Mh/4W2NkJL1ZR3XgmbTLiBOZojsk3qwDT1H+UL9OFk=
-            public_key: Hz4bSljUJu7dKNojY9gAx6CtOJynSS7FCQ2WPZVfuEI=
+            private_key: <private key>
+            public_key: <public key>
             peers:
               - name: vpn2
-              - name: vpn3
         vpn2:
           ansible_host: 192.168.22.113
-          ansible_user: vagrant
           routes:
             - net: 10.22.0.0
               mask: 255.255.0.0
@@ -131,13 +120,12 @@ All the parameters for the roles can be provided in the inventory, we recommend 
             address: 10.9.0.3/32
             listening_port: 36582
             endpoint: 10.22.4.11
-            private_key: +K5nfFf8Wc37WSC8AiF2kKc+IMCbZMzcXF5F5N4voH8=
-            public_key: Jhqylbk7pQSB/t8CxkqxYWBKs58KO/hn8Sh8f0PlR2s=
+            private_key: <private key>
+            public_key: <public key>
             peers:
               - name: vpn1
-              - name: vpn4****
 
-# Rotating wiregard keys
+# Rotating wireguard keys
 
 To rotate wireguard keys use the following script
 
