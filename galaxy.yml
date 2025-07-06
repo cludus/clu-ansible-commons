@@ -2,7 +2,7 @@
 authors:
   - Cludus Dev Team
 license_file: LICENSE
-name: cludus-roles
+name: commons
 tags: [routing, networking, facts, frr]
 namespace: cludus
 readme: README.md
