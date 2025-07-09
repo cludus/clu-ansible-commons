@@ -13,6 +13,17 @@
     update_cache: true
     state: latest
 
+- name: check if vpn service exists
+  stat: path=/etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+  register: service_status
+
+- name: stop service
+  ansible.builtin.service:
+    name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    enabled: yes
+    state: stopped
+  when: service_status.stat.exists
+
 - name: create server wireguard config
   template:
     dest: /etc/wireguard/{{ hostvars[inventory_hostname].vpn.name }}.conf
@@ -21,13 +32,6 @@
     group: root
     mode: '0600'
   register: wgconfig
-
-- name: start service
-  ansible.builtin.service:
-    name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
-    enabled: yes
-    state: stopped
-  when: wgconfig.changed
 
 - name: create server wireguard config
   template:
