@@ -27,7 +27,7 @@ Using requirements.yml file is also posible
 
 then install it by using 
 
-    ansible-galaxy collection install -r requirements.yml -p ./collections
+    ansible-galaxy collection install -r requirements.yml -p ./.collections
 
 # Usage
 
