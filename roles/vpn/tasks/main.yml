@@ -24,31 +24,24 @@
     state: stopped
   when: service_status.stat.exists
 
-- name: create server wireguard config
+- name: create wireguard config
   template:
     dest: /etc/wireguard/{{ hostvars[inventory_hostname].vpn.name }}.conf
     src: wg.conf.j2
     owner: root
     group: root
     mode: '0600'
-  register: wgconfig
 
-- name: create server wireguard config
+- name: create wireguard service
   template:
     dest: /etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
     src: wg-quick.j2
     owner: root
     group: root
     mode: '0700'
-  register: wgrcservice
 
 - name: start service
   ansible.builtin.service:
     name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
     enabled: yes
     state: started
-  when: wgconfig.changed
-
-#- name: unconditionally reboot the machine with all defaults
-#  ansible.builtin.reboot:
-#  when: wgconfig.changed
