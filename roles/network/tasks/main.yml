@@ -1,0 +1,14 @@
+
+- name: setup network interfaces
+  template:
+    dest: /etc/network/interfaces
+    src: interfaces.j2
+    owner: root
+    group: root
+    mode: '0755'
+  register: interfacescfg
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: restart the pc to get the network running
+  ansible.builtin.reboot:
+  when: interfacescfg.changed

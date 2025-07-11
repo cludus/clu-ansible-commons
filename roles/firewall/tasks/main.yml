@@ -1,5 +1,0 @@
-- name: install ufw
-  community.general.apk:
-    name: uwf
-  become: true
-

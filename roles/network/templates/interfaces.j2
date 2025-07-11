@@ -1,0 +1,13 @@
+auto lo
+iface lo inet loopback
+
+{% if hostvars[inventory_hostname].ifaces is defined %}
+{% for if in hostvars[inventory_hostname].ifaces %}
+auto {{ if.name }}
+iface {{ if.name }} inet static
+        address {{ if.ip }}
+        netmask {{ if.mask }}
+        {% if if.gw is defined %}gateway {{ if.gw }}{% endif %}
+
+{% endfor %}
+{% endif %}
