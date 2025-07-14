@@ -6,12 +6,21 @@
     state: present
     reload: true
 
-- name: install wireguard
+- name: install wireguard-tools
   ansible.builtin.package:
     name:
       - wireguard-tools
     update_cache: true
     state: latest
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: install wireguard
+  ansible.builtin.package:
+    name:
+      - wireguard
+    update_cache: true
+    state: latest
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: check if vpn service exists
   stat: path=/etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
@@ -42,9 +51,16 @@
     mode: '0700'
   when: ansible_facts['distribution'] == "Alpine"
 
-- name: start service
+- name: start service alpine
   ansible.builtin.service:
     name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
     enabled: yes
     state: started
   when: ansible_facts['distribution'] == "Alpine"
+
+- name: start service ubuntu
+  systemd:
+    name: wg-quick@{{ hostvars[inventory_hostname].vpn.name }}
+    enabled: yes
+    state: restarted
+  when: ansible_facts['distribution'] == "Ubuntu"

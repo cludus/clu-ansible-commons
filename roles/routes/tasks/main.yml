@@ -3,6 +3,15 @@
   ansible.builtin.service:
     name: staticroute
     enabled: yes
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: iptables
+  ansible.builtin.package:
+    name:
+      - iptables-persistent
+    update_cache: true
+    state: latest
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: adding config routes script
   template:
@@ -14,12 +23,23 @@
   register: routescfg
   when: ansible_facts['distribution'] == "Alpine"
 
+- name: adding config routes script
+  template:
+    dest: /etc/networkd-dispatcher/routable.d/config_routes
+    src: config_routes.j2
+    owner: root
+    group: root
+    mode: '0755'
+  register: ubtroutescfg
+  when: ansible_facts['distribution'] == "Ubuntu"
+
 - name: unconditionally reboot the machine with all defaults
   ansible.builtin.reboot:
-  when: routescfg.changed
+  when: routescfg.changed || ubtroutescfg.changed
 
 - name: enable service staticroute
   ansible.builtin.service:
     name: staticroute
     enabled: yes
     state: restarted
+  when: ansible_facts['distribution'] == "Alpine"

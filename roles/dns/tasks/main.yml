@@ -9,7 +9,7 @@
 
 - name: Set a hostname
   ansible.builtin.hostname:
-    name: "{{ inventory_hostname }}"
+    name: "{{ hostvars[inventory_hostname].hostname }}"
 
 - name: restart on resolv.conf added
   ansible.builtin.reboot:

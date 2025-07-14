@@ -1,0 +1,8 @@
+#!/bin/bash
+{% if hostvars[inventory_hostname].routes is defined %}
+{% for rt in hostvars[inventory_hostname].routes %}
+if [[ $IFACE == "{{ rt.if }}" && $AdministrativeState == "configured" ]]; then
+    ip route {{ rt.net }}/{{ rt.sufix }} via {{ rt.next_hop }}
+fi
+{% endfor %}
+{% endif %}
