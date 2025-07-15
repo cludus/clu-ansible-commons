@@ -43,3 +43,11 @@
     enabled: yes
     state: restarted
   when: ansible_facts['distribution'] == "Alpine"
+
+- name: enable service networkd-dispatcher
+  systemd:
+    name: networkd-dispatcher.service
+    enabled: yes
+    state: restarted
+  when: ansible_facts['distribution'] == "Ubuntu"
+  
