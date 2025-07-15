@@ -23,7 +23,8 @@
   when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: check if vpn service exists
-  stat: path=/etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+  stat:
+    path: "/etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}"
   register: service_status
   when: ansible_facts['distribution'] == "Alpine"
 
@@ -32,7 +33,7 @@
     name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
     enabled: yes
     state: stopped
-  when: service_status.stat.exists and ansible_facts['distribution'] == "Alpine"
+  when: ansible_facts['distribution'] == "Alpine" and service_status.stat.exists
 
 - name: create wireguard config
   template:

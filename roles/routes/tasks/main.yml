@@ -35,7 +35,7 @@
 
 - name: unconditionally reboot the machine with all defaults
   ansible.builtin.reboot:
-  when: routescfg.changed || ubtroutescfg.changed
+  when: routescfg.changed or ubtroutescfg.changed
 
 - name: enable service staticroute
   ansible.builtin.service:
