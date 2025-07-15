@@ -9,7 +9,8 @@ SaveConfig = false
 {% for item in hostvars[inventory_hostname].vpn.peers %}
 [Peer]
 PublicKey = {{ hostvars[item.name].vpn.public_key }}
-AllowedIPs = {{ hostvars[item.name].vpn.address }}
+AllowedIPs = {{ hostvars[item.name].vpn.address }}{% if item.allowedIps is defined %}, {{ item.allowedIps }}
+{% endif %}
 {% if hostvars[item.name].vpn.endpoint is defined %}
 Endpoint = {{ hostvars[item.name].vpn.endpoint }}:{{ hostvars[item.name].vpn.listening_port }}
 {% endif %}
