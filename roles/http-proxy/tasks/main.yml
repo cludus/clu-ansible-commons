@@ -1,0 +1,25 @@
+
+- name: create /cnt
+  ansible.builtin.file:
+    path: /cnt
+    state: directory
+    mode: '0755'
+
+- name: create /cnt/vol
+  ansible.builtin.file:
+    path: /cnt/vol
+    state: directory
+    mode: '0755'
+
+- name: copy cfg
+  ansible.builtin.copy:
+    src: cfg
+    dest: /cnt
+
+- name: adding compose config
+  template:
+    dest: /cnt/compose.yml
+    src: compose.yml.j2
+    owner: root
+    group: root
+    mode: '0755'

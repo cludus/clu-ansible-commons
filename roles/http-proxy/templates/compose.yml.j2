@@ -1,0 +1,18 @@
+services:
+  proxy:
+    restart: always
+    volumes:
+      - ./cfg/proxy/html:/usr/share/nginx/html
+      - ./cfg/proxy/conf.d:/etc/nginx/conf.d
+      - ./vol/certbot/conf:/etc/letsencrypt
+      - ./vol/certbot/www:/var/www/certbot
+    ports:
+      - 192.168.0.2:80:80
+      - 192.168.0.2:443:443
+    image: nginx
+
+  certbot:
+    volumes:
+      - ./vol/certbot/conf:/etc/letsencrypt
+      - ./vol/certbot/www:/var/www/certbot
+    image: certbot/certbot
