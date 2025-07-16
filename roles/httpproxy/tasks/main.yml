@@ -23,3 +23,12 @@
     owner: root
     group: root
     mode: '0755'
+
+- name: adding domains
+  template:
+    dest: /cnt/{{ item.name }}.conf
+    src: domain.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ http_domains }}"

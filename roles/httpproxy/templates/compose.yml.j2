@@ -7,8 +7,12 @@ services:
       - ./vol/certbot/conf:/etc/letsencrypt
       - ./vol/certbot/www:/var/www/certbot
     ports:
-      - 192.168.0.2:80:80
-      - 192.168.0.2:443:443
+{% if hostvars[inventory_hostname].listen_ips is defined %}
+{% for ip in hostvars[inventory_hostname].listen_ips %}
+      - {{ ip }}:80:80
+      - {{ ip }}:443:443
+{% endfor %}
+{% endif %}
     image: nginx
 
   certbot:
