@@ -30,10 +30,18 @@
     state: directory
     mode: '0755'
 
-- name: adding renew-cert script
+- name: adding renew-certs script
   template:
     dest: /cnt/.bin/renew-certs
     src: renew-certs.j2
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: adding renew-cert script
+  template:
+    dest: /cnt/.bin/renew-cert
+    src: renew-cert.j2
     owner: root
     group: root
     mode: '0755'
