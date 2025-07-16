@@ -24,10 +24,16 @@
     group: root
     mode: '0755'
 
+- name: create /cnt/.bin
+  ansible.builtin.file:
+    path: /cnt/.bin
+    state: directory
+    mode: '0755'
+
 - name: adding renew-cert script
   template:
-    dest: /cnt/renew-certs
-    src: renew-cert.sh.j2
+    dest: /cnt/.bin/renew-certs
+    src: renew-cert.j2
     owner: root
     group: root
     mode: '0755'
