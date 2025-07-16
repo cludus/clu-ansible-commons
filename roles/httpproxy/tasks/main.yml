@@ -33,7 +33,7 @@
 - name: adding renew-cert script
   template:
     dest: /cnt/.bin/renew-certs
-    src: renew-cert.j2
+    src: renew-certs.j2
     owner: root
     group: root
     mode: '0755'
