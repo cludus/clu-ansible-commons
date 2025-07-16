@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker)" ]; then
   exit 1
 fi
 
-domains=({% for domain in hostvars[inventory_hostname].http_proxy.domains %}{{ domain.name }}{% endfor %})
+domains=({% for domain in hostvars[inventory_hostname].http_proxy.domains %}{{ domain.name }} {% endfor %})
 rsa_key_size=4096
 data_path="/cnt/vol/certbot"
 email="{{ hostvars[inventory_hostname].http_proxy.email }}" # Adding a valid address is strongly recommended
