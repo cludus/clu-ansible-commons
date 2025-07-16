@@ -7,8 +7,8 @@ services:
       - ./vol/certbot/conf:/etc/letsencrypt
       - ./vol/certbot/www:/var/www/certbot
     ports:
-{% if hostvars[inventory_hostname].listen_ips is defined %}
-{% for ip in hostvars[inventory_hostname].listen_ips %}
+{% if hostvars[inventory_hostname].http_proxy.listen_ips is defined %}
+{% for ip in hostvars[inventory_hostname].http_proxy.listen_ips %}
       - {{ ip }}:80:80
       - {{ ip }}:443:443
 {% endfor %}

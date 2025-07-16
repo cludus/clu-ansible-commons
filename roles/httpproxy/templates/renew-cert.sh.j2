@@ -8,7 +8,7 @@ fi
 domains=($1)
 rsa_key_size=4096
 data_path="/cnt/vol/certbot"
-email="{{ hostvars[inventory_hostname].email }}" # Adding a valid address is strongly recommended
+email="{{ hostvars[inventory_hostname].http_proxy.email }}" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then

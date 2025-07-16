@@ -39,4 +39,4 @@
     owner: root
     group: root
     mode: '0755'
-  loop: "{{ http_domains }}"
+  loop: "{{ http_proxy.domains }}"
