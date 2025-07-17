@@ -5,7 +5,6 @@
       - ufw
     update_cache: true
     state: present
-  when: ansible_facts['distribution'] == "Alpine"
 
 - name: deny all incoming traffic by default
   community.general.ufw:
