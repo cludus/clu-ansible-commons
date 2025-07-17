@@ -1,5 +1,5 @@
 
-- name: install docker
+- name: install docker alpine
   ansible.builtin.package:
     name:
       - docker
@@ -7,9 +7,40 @@
     state: present
   when: ansible_facts['distribution'] == "Alpine"
 
+- name: install docker pre-req ubuntu
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    update_cache: true
+    state: present
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: add docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: add docker repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: update apt and install docker-ce
+  apt:
+    pkg:
+      - docker-ce
+    state: latest
+    update_cache: true
+  when: ansible_facts['distribution'] == "Ubuntu"
+
 - name: enable service staticroute
   ansible.builtin.service:
     name: docker
     enabled: yes
     state: started
-  when: ansible_facts['distribution'] == "Alpine"
+#  when: ansible_facts['distribution'] == "Alpine"

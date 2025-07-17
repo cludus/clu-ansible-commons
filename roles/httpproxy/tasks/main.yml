@@ -5,34 +5,40 @@
     state: directory
     mode: '0755'
 
-- name: create /cnt/vol
+- name: create /cnt/http_proxy
   ansible.builtin.file:
-    path: /cnt/vol
+    path: /cnt/http_proxy
+    state: directory
+    mode: '0755'
+
+- name: create /cnt/http_proxy/vol
+  ansible.builtin.file:
+    path: /cnt/http_proxy/vol
     state: directory
     mode: '0755'
 
 - name: copy cfg
   ansible.builtin.copy:
     src: cfg
-    dest: /cnt
+    dest: /cnt/http_proxy
 
 - name: adding compose config
   template:
-    dest: /cnt/compose.yml
+    dest: /cnt/http_proxy/compose.yml
     src: compose.yml.j2
     owner: root
     group: root
     mode: '0755'
 
-- name: create /cnt/.bin
+- name: create /cnt/http_proxy/.bin
   ansible.builtin.file:
-    path: /cnt/.bin
+    path: /cnt/http_proxy/.bin
     state: directory
     mode: '0755'
 
 - name: adding renew-certs script
   template:
-    dest: /cnt/.bin/renew-certs
+    dest: /cnt/http_proxy/.bin/renew-certs
     src: renew-certs.j2
     owner: root
     group: root
@@ -40,7 +46,7 @@
 
 - name: adding renew-cert script
   template:
-    dest: /cnt/.bin/renew-cert
+    dest: /cnt/http_proxy/.bin/renew-cert
     src: renew-cert.j2
     owner: root
     group: root
@@ -48,7 +54,7 @@
 
 - name: adding domains
   template:
-    dest: /cnt/cfg/proxy/conf.d/{{ item.name }}.conf
+    dest: /cnt/http_proxy/cfg/proxy/conf.d/{{ item.name }}.conf
     src: domain.conf.j2
     owner: root
     group: root
