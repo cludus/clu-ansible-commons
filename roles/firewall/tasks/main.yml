@@ -7,18 +7,41 @@
     state: present
   when: ansible_facts['distribution'] == "Alpine"
 
-- name: deny all incoming traffic
+- name: deny all incoming traffic by default
   community.general.ufw:
     default: deny
     direction: incoming
 
-- name: allow all outgoing traffic
+- name: deny all outgoing traffic by default
   community.general.ufw:
-    default: allow
+    default: deny
     direction: outgoing
+
+- name: deny forwarded/routed traffic by default
+  community.general.ufw:
+    default: deny
+    route: true
 
 - community.general.ufw:
     rule: limit
     port: ssh
     proto: tcp
-    from_ip: "{{ hostvars[inventory_hostname].firewall.admin_ip }}"
+    from_ip: "{{ firewall.admin_ip }}"
+
+- name: allow all outgoing traffic
+  community.general.ufw:
+    rule: allow
+    direction: out
+
+- community.general.ufw:
+    rule: allow
+    route: true
+
+- community.general.ufw:
+    state: enabled
+
+- name: add ufw service
+  ansible.builtin.service:
+    name: ufw
+    state: restarted
+    enabled: true
