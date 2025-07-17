@@ -1,0 +1,14 @@
+frr version 8.5.2
+frr defaults traditional
+!
+hostname {{ inventory_hostname }}
+!
+router ospf
+ ospf router-id {{ hostvars[inventory_hostname].ansible_host }}
+{% if hostvars[inventory_hostname].networks is defined %}
+{% for net in hostvars[inventory_hostname].networks %}
+ network {{ net.ip }}/{{ net.suffix }} area 0.0.0.0
+{% endfor %}
+{% endif %}
+exit
+!
