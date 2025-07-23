@@ -11,7 +11,7 @@
       - iptables-persistent
     update_cache: true
     state: latest
-  when: ansible_facts['distribution'] == "Ubuntu"
+  when: ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Debian"
 
 - name: adding config routes script
   template:
@@ -23,7 +23,7 @@
   register: routescfg
   when: ansible_facts['distribution'] == "Alpine"
 
-- name: adding config routes script
+- name: adding config routes script ubuntu
   template:
     dest: /etc/networkd-dispatcher/routable.d/config_routes
     src: config_routes.j2
@@ -33,9 +33,19 @@
   register: ubtroutescfg
   when: ansible_facts['distribution'] == "Ubuntu"
 
+- name: adding config routes script debian
+  template:
+    dest: /etc/network/if-up.d/config_routes
+    src: config_routes.j2
+    owner: root
+    group: root
+    mode: '0755'
+  register: debroutescfg
+  when: ansible_facts['distribution'] == "Debian"
+
 - name: unconditionally reboot the machine with all defaults
   ansible.builtin.reboot:
-  when: routescfg.changed or ubtroutescfg.changed
+  when: routescfg.changed or ubtroutescfg.changed or debroutescfg.changed
 
 - name: enable service staticroute
   ansible.builtin.service:
