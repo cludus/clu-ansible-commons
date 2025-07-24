@@ -1,8 +1,8 @@
 #!/sbin/openrc-run
 description="WireGuard Quick"
 start() {
-  wg-quick up {{ hostvars[inventory_hostname].vpn.name }}
+  wg-quick up wg0
 }
 stop() {
-  wg-quick down {{ hostvars[inventory_hostname].vpn.name }}
+  wg-quick down wg0
 }

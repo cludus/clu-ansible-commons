@@ -24,20 +24,20 @@
 
 - name: check if vpn service exists
   stat:
-    path: "/etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}"
+    path: "/etc/init.d/wg-quick-wg0"
   register: service_status
   when: ansible_facts['distribution'] == "Alpine"
 
 - name: stop service
   ansible.builtin.service:
-    name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    name: wg-quick-wg0
     enabled: yes
     state: stopped
   when: ansible_facts['distribution'] == "Alpine" and service_status.stat.exists
 
 - name: create wireguard config
   template:
-    dest: /etc/wireguard/{{ hostvars[inventory_hostname].vpn.name }}.conf
+    dest: /etc/wireguard/wg0.conf
     src: wg.conf.j2
     owner: root
     group: root
@@ -45,7 +45,7 @@
 
 - name: create wireguard service
   template:
-    dest: /etc/init.d/wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    dest: /etc/init.d/wg-quick-wg0
     src: wg-quick.j2
     owner: root
     group: root
@@ -54,14 +54,14 @@
 
 - name: start service alpine
   ansible.builtin.service:
-    name: wg-quick-{{ hostvars[inventory_hostname].vpn.name }}
+    name: wg-quick-wg0
     enabled: yes
     state: started
   when: ansible_facts['distribution'] == "Alpine"
 
 - name: start service ubuntu
   systemd:
-    name: wg-quick@{{ hostvars[inventory_hostname].vpn.name }}
+    name: wg-quick@wg0
     enabled: yes
     state: restarted
   when: ansible_facts['distribution'] == "Ubuntu"

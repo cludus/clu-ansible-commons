@@ -15,5 +15,6 @@ AllowedIPs = {{ hostvars[item.name].vpn.address }}{% if item.allowedIps is defin
 Endpoint = {{ hostvars[item.name].vpn.endpoint }}:{{ hostvars[item.name].vpn.listening_port }}
 {% endif %}
 PersistentKeepalive = 30
+
 {% endfor %}
 {% endif %}

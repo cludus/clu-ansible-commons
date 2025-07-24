@@ -11,15 +11,13 @@
   ansible.builtin.hostname:
     name: "{{ hostvars[inventory_hostname].hostname }}"
 
-- name: Add entry to /etc/hosts
-  lineinfile:
-    path: /etc/hosts
-    regexp: '^{{ item.ip }}  {{ item.hostname }}'  # Replace with your desired IP and hostname
-    line: '{{ item.ip }}  {{ item.hostname }}'   # Replace with your desired IP and hostname
-    state: present
-    mode: 0644
-  become: yes
-  loop: "{{ hosts }}"
+- name: adding config routes script ubuntu
+  template:
+    dest: /etc/hosts
+    src: hosts.j2
+    owner: root
+    group: root
+    mode: '0444'
 
 - name: restart on resolv.conf added
   ansible.builtin.reboot:
