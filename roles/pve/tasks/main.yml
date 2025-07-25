@@ -7,25 +7,3 @@
       - python3-requests
     update_cache: true
     state: present
-
-- name: create a proxmox ve cluster
-  community.proxmox.proxmox_cluster:
-    state: present
-    api_host: "{{ pve.host }}"
-    api_user: root@pam
-    api_password: "{{ pve.password }}"
-    api_ssl_verify: true
-    link0: "{{ pve.master_ip }}"
-    cluster_name: "{{ pve.cluster_name }}"
-  when: pve.master
-
-- name: join a proxmox ve cluster
-  community.proxmox.proxmox_cluster:
-    state: present
-    api_host: "{{ pve.host }}"
-    api_user: root@pam
-    api_password: "{{ pve.password }}"
-    master_ip: "{{ pve.master_ip }}"
-    fingerprint: "{{ pve.cluster_fingerprint }}"
-    cluster_name: "{{ pve.cluster_name }}"
-  when: not pve.master

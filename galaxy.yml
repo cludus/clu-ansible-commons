@@ -10,5 +10,3 @@ description: Ansible Collection for Cludus setup
 repository: https://github.com/cludus/clu-ansible-roles
 issues: https://github.com/cludus/clu-ansible-roles/issues
 version: "0.2.0"
-dependencies:
-  community.proxmox: ">=1.2.0"
