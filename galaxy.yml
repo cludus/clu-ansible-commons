@@ -11,4 +11,4 @@ repository: https://github.com/cludus/clu-ansible-roles
 issues: https://github.com/cludus/clu-ansible-roles/issues
 version: "0.2.0"
 dependencies:
-  ansible.builtin: ">=1.2.0"
+  community.proxmox: ">=1.2.0"
