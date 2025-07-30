@@ -25,7 +25,8 @@
     rule: limit
     port: ssh
     proto: tcp
-    from_ip: "{{ firewall.admin_ip }}"
+    from_ip: "{{ item.ip }}"
+  loop: "{{ firewall.admin_ips }}"
 
 - name: allow all outgoing traffic
   community.general.ufw:

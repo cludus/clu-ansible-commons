@@ -1,10 +1,10 @@
 - name: adding resolv.conf
-  ansible.builtin.copy:
-    src: resolv.conf
+  template:
     dest: /etc/resolv.conf
+    src: resolv.conf.j2
     owner: root
     group: root
-    mode: '0644'
+    mode: '0444'
   register: resolv
 
 - name: Set a hostname
