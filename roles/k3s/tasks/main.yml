@@ -1,6 +1,9 @@
 - name: install curl and yq alpine
-  community.general.package:
-    name: curl,yq,openssl
+  ansible.builtin.package:
+    name:
+      - curl
+      - yq
+      - openssl
   become: true
 
 - name: check k3s
@@ -17,7 +20,7 @@
 - name: uninstall
   ansible.builtin.raw: |
     /usr/local/bin/k3s-uninstall.sh
-  when: k3s.uninstall
+  when: hostvars[inventory_hostname].k3s.uninstall
 
 - name: Create tls directory
   ansible.builtin.file:
@@ -28,7 +31,7 @@
 
 - name: upload ssl crt
   copy:
-    src: "{{ k3s.root_ca_path }}"
+    src: "{{ hostvars[inventory_hostname].k3s.root_ca_path }}"
     dest: /var/lib/rancher/k3s/server/tls/root-ca.pem
     decrypt: yes
     mode: 0600
@@ -36,92 +39,65 @@
 
 - name: upload ssl key
   copy:
-    src: "{{ k3s.root_ca_key_path }}"
+    src: "{{ hostvars[inventory_hostname].k3s.root_ca_key_path }}"
     dest: /var/lib/rancher/k3s/server/tls/root-ca.key
     decrypt: yes
     mode: 0600
   when: k3s_check.rc > 1
 
 - name: create ca certs
-  ansible.builtin.shell: curl -sfL https://github.com/k3s-io/k3s/raw/master/contrib/util/generate-custom-ca-certs.sh | sh -s -
-  when: k3s_check.rc > 1 and ansible_facts['distribution'] == "Alpine"
+  ansible.builtin.shell: curl -sfL https://github.com/k3s-io/k3s/raw/master/contrib/util/generate-custom-ca-certs.sh | {{ (ansible_facts['distribution'] == "Alpine")|ternary('sh', 'bash') }} -s -
+  when: k3s_check.rc > 1
 
 - name: install k3s master
   ansible.builtin.raw: |
-    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s - \
-      --node-external-ip={{ ansible_host }} \
-      --bind-address={{ ansible_host }} \
-      --kube-proxy-arg="bind-address={{ ansible_host }}" \
-      --kubelet-arg="node-ip={{ ansible_host }}" \
-      --tls-san {{ k3s.host_name }} \
-      --token {{ k3s.cluster_token }} \
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" {{ (ansible_facts['distribution'] == "Alpine")|ternary('sh', 'bash') }} -s - \
+      --node-external-ip={{ hostvars[inventory_hostname].k3s.ip }} \
+      --bind-address={{ hostvars[inventory_hostname].k3s.ip }} \
+      --kube-proxy-arg="bind-address={{ hostvars[inventory_hostname].k3s.ip }}" \
+      --kubelet-arg="node-ip={{ hostvars[inventory_hostname].k3s.ip }}" \
+      --tls-san {{ hostvars[inventory_hostname].k3s.hostname }} \
+      --token {{ hostvars[inventory_hostname].k3s.cluster_token }} \
       --cluster-init \
       --write-kubeconfig-mode 644 \
       --disable traefik \
       --disable servicelb \
-      --node-ip {{ ansible_host }} \
+      --node-ip {{ hostvars[inventory_hostname].k3s.ip }} \
       --node-taint node-role.kubernetes.io/master=true:NoSchedule
   become: true
-  when: k3s_check.rc > 1 and ansible_facts['distribution'] == "Alpine" and k3s.node_type == "master"
+  when: k3s_check.rc > 1 and hostvars[inventory_hostname].k3s.node_type == "master"
   register: k3s_install
 
-- name: create ca certs
-  ansible.builtin.shell: curl -sfL https://github.com/k3s-io/k3s/raw/master/contrib/util/generate-custom-ca-certs.sh | bash -s -
-  when: k3s_check.rc > 1 and k3s.node_type == "master" and ansible_facts['distribution'] == "Ubuntu"
-
-- name: install k3s master
-  ansible.builtin.raw: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" bash -s -
-      --node-external-ip={{ ansible_host }} \
-      --bind-address={{ ansible_host }} \
-      --kube-proxy-arg="bind-address={{ ansible_host }}" \
-      --kubelet-arg="node-ip={{ ansible_host }}" \
-      --tls-san {{ k3s.host_name }} \
-      --token {{ k3s.cluster_token }} \
-      --cluster-init \
+- name: install k3s server
+  ansible.builtin.raw: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" {{ (ansible_facts['distribution'] == "Alpine")|ternary('sh', 'bash') }} -s - \
+      --node-external-ip={{ hostvars[inventory_hostname].k3s.ip }} \
+      --bind-address={{ hostvars[inventory_hostname].k3s.ip }} \
+      --kube-proxy-arg="bind-address={{ hostvars[inventory_hostname].k3s.ip }}" \
+      --kubelet-arg="node-ip={{ hostvars[inventory_hostname].k3s.ip }}" \
+      --tls-san {{ hostvars[inventory_hostname].k3s.hostname }} \
+      --token {{ hostvars[inventory_hostname].k3s.cluster_token }} \
+      --server https://{{ hostvars[inventory_hostname].k3s.master_server }}:6443 \
       --write-kubeconfig-mode 644 \
       --disable traefik \
       --disable servicelb \
-      --node-ip {{ ansible_host }} \
+      --node-ip {{ hostvars[inventory_hostname].k3s.ip }} \
       --node-taint node-role.kubernetes.io/master=true:NoSchedule
   become: true
-  when: k3s_check.rc > 1 and ansible_facts['distribution'] == "Ubuntu" and k3s.node_type == "master"
+  when: k3s_check.rc > 1 and hostvars[inventory_hostname].k3s.node_type == "server"
   register: k3s_install
 
-- name: install k3s server alpine
-  ansible.builtin.raw: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s - \
-      --node-external-ip={{ ansible_host }} \
-      --bind-address={{ ansible_host }} \
-      --kube-proxy-arg="bind-address={{ ansible_host }}" \
-      --kubelet-arg="node-ip={{ ansible_host }}" \
-      --tls-san {{ k3s.host_name }} \
-      --token {{ k3s.cluster_token }} \
-      --server https://{{ k3s.master_server }}:6443 \
-      --write-kubeconfig-mode 644 \
-      --disable traefik \
-      --disable servicelb \
-      --node-ip {{ ansible_host }} \
-      --node-taint node-role.kubernetes.io/master=true:NoSchedule
-  become: true
-  when: k3s_check.rc > 1 and k3s.node_type == "server" and ansible_facts['distribution'] == "Alpine"
+- name: install k3s agent
+  ansible.builtin.raw: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent" {{ (ansible_facts['distribution'] == "Alpine")|ternary('sh', 'bash') }} -s - \
+    --node-external-ip={{ hostvars[inventory_hostname].k3s.ip }} \
+    --bind-address={{ hostvars[inventory_hostname].k3s.ip }} \
+    --kube-proxy-arg="bind-address={{ hostvars[inventory_hostname].k3s.ip }}" \
+    --kubelet-arg="node-ip={{ hostvars[inventory_hostname].k3s.ip }}" \
+    --token {{ hostvars[inventory_hostname].k3s.cluster_token }} \
+    --server https://{{ hostvars[inventory_hostname].k3s.master_server }}:6443 \
+    --node-ip {{ hostvars[inventory_hostname].k3s.ip }} \
+    --node-label="disk_type={{ hostvars[inventory_hostname].disk_type }}"
   register: k3s_install
-
-- name: install k3s server ubuntu
-  ansible.builtin.raw: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" bash -s - \
-      --node-external-ip={{ ansible_host }} \
-      --bind-address={{ ansible_host }} \
-      --kube-proxy-arg="bind-address={{ ansible_host }}" \
-      --kubelet-arg="node-ip={{ ansible_host }}" \
-      --tls-san {{ k3s.host_name }} \
-      --token {{ k3s.cluster_token }} \
-      --server https://{{ k3s.master_server }}:6443 \
-      --write-kubeconfig-mode 644 \
-      --disable traefik \
-      --disable servicelb \
-      --node-ip {{ ansible_host }} \
-      --node-taint node-role.kubernetes.io/master=true:NoSchedule
-  become: true
-  when: k3s_check.rc > 1 and k3s.node_type == "server" and ansible_facts['distribution'] == "Ubuntu"
-  register: k3s_install
+  when: k3s_check.rc > 1 and hostvars[inventory_hostname].k3s.node_type == "agent"
 
 - name: reboot when k3s is installed
   ansible.builtin.reboot:
@@ -129,11 +105,10 @@
 
 - name: edit cluster configuration
   ansible.builtin.shell: |
-    yq '.clusters[0].cluster.server |= "https://{{ k3s.host_name }}:6443"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
+    yq '.clusters[0].cluster.server |= "https://{{ hostvars[inventory_hostname].k3s.hostname }}:6443"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
 
 - name: storing in a path relative to the playbook
   ansible.builtin.fetch:
     src: /etc/rancher/k3s/config.yaml
-    dest: ../.target/kubectl/{{ k3s.cluster_name }}.yml
+    dest: "{{ hostvars[inventory_hostname].k3s.config_dir }}/{{ hostvars[inventory_hostname].k3s.cluster_name }}.yml"
     flat: yes
-  register: k3s.node_type == "master"
