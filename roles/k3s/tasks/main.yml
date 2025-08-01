@@ -3,20 +3,8 @@
     name:
       - curl
       - openssl
-  become: true
-
-- name: install yq alpine
-  ansible.builtin.package:
-    name:
       - yq
   become: true
-  when: ansible_facts['distribution'] == "Alpine"
-
-- name: install yq ubuntu
-  community.general.snap:
-    name:
-      - yq
-  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: check k3s
   ansible.builtin.command: k3s
@@ -118,9 +106,11 @@
 - name: edit cluster configuration
   ansible.builtin.shell: |
     yq '.clusters[0].cluster.server |= "https://{{ hostvars[inventory_hostname].k3s.hostname }}:6443"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
+  when: k3s_check.rc > 1
 
 - name: storing in a path relative to the playbook
   ansible.builtin.fetch:
     src: /etc/rancher/k3s/config.yaml
     dest: "{{ hostvars[inventory_hostname].k3s.config_dir }}/{{ hostvars[inventory_hostname].k3s.cluster_name }}.yml"
     flat: yes
+  when: k3s_check.rc > 1
