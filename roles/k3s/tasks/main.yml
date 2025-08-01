@@ -1,10 +1,22 @@
-- name: install curl and yq alpine
+- name: install curl and openssl
   ansible.builtin.package:
     name:
       - curl
-      - yq
       - openssl
   become: true
+
+- name: install yq alpine
+  ansible.builtin.package:
+    name:
+      - yq
+  become: true
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: install yq ubuntu
+  community.general.snap:
+    name:
+      - yq
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: check k3s
   ansible.builtin.command: k3s
