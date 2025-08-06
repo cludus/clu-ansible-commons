@@ -106,11 +106,11 @@
 - name: edit cluster configuration
   ansible.builtin.shell: |
     yq '.clusters[0].cluster.server |= "https://{{ hostvars[inventory_hostname].k3s.hostname }}:6443"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
-  when: k3s_check.rc > 1 and hostvars[inventory_hostname].k3s.node_type == "master"
+  when: hostvars[inventory_hostname].k3s.node_type == "master"
 
 - name: storing in a path relative to the playbook
   ansible.builtin.fetch:
     src: /etc/rancher/k3s/config.yaml
     dest: "{{ hostvars[inventory_hostname].k3s.config_dir }}/{{ hostvars[inventory_hostname].k3s.cluster_name }}.yml"
     flat: yes
-  when: k3s_check.rc > 1 and hostvars[inventory_hostname].k3s.node_type == "master"
+  when: hostvars[inventory_hostname].k3s.node_type == "master"
