@@ -95,7 +95,7 @@
     --token {{ hostvars[inventory_hostname].k3s.cluster_token }} \
     --server https://{{ hostvars[inventory_hostname].k3s.master_server }}:6443 \
     --node-ip {{ hostvars[inventory_hostname].k3s.ip }} \
-    --node-label="disk_type={{ hostvars[inventory_hostname].disk_type }}"
+    --node-label="disk_type={{ hostvars[inventory_hostname].k3s.disk_type }}"
   register: k3s_install
   when: k3s_check.rc > 1 and hostvars[inventory_hostname].k3s.node_type == "agent"
 
