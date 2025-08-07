@@ -28,12 +28,11 @@ jobs:
               major=$((major+1))
               minor=0
               echo "new-major-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
-              
-              
 
-#      - name: Release
-#        uses: softprops/action-gh-release@v2
-#        if: github.ref_type == 'tag'
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        tag_name: ${{ steps.extract-current-version.outputs.new-patch-version }}
+        if: github.ref_type == 'tag'
 
       - name: Bump up version
         run: |
