@@ -11,6 +11,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: github.ref_type == 'tag'
+      - name: Run a simple Bash command
+        run: |
+              version=$(yq '.version' galaxy.yml)
+              IFS='.' read -r major minor patch <<< "$version"
+              patch=$((patch+1))
+              # yq -i ".version = \"$major.$minor.$patch\"" galaxy.yml
+              echo $major.$minor.$patch
+
+#      - name: Release
+#        uses: softprops/action-gh-release@v2
+#        if: github.ref_type == 'tag'
