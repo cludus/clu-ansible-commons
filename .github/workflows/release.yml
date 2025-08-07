@@ -16,14 +16,25 @@ jobs:
         run: |
               version=$(yq '.version' galaxy.yml)
               IFS='.' read -r major minor patch <<< "$version"
-              # patch=$((patch+1))
-              # yq -i ".version = \"$major.$minor.$patch\"" galaxy.yml
-              echo "new-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              patch=$((patch+1))
+              echo "new-patch-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              minor=$((minor+1))
+              patch=0
+              echo "new-minor-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              major=$((major+1))
+              minor=0
+              echo "new-major-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              
+              
 
 #      - name: Release
 #        uses: softprops/action-gh-release@v2
 #        if: github.ref_type == 'tag'
 
-      - name: Use Output
+      - name: Bump up version
         run: |
-          echo "The generated value is: ${{ steps.extract-current-version.outputs.new-version }}"        
+          yq -i ".version = \"${{ steps.extract-current-version.outputs.new-patch-version }}\"" galaxy.yml
+          git add .
+          git commit - m "bump up version"
+          git push
