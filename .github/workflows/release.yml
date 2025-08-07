@@ -35,6 +35,6 @@ jobs:
       - name: Bump up version
         run: |
           yq -i ".version = \"${{ steps.extract-current-version.outputs.new-patch-version }}\"" galaxy.yml
-          git add .
-          git commit - m "bump up version"
-          git push
+#          git add .
+#          git commit - m "bump up version"
+#          git push
