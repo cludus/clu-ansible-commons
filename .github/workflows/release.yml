@@ -3,6 +3,9 @@ name: Release
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 
 jobs:
   build:
@@ -35,6 +38,6 @@ jobs:
       - name: Bump up version
         run: |
           yq -i ".version = \"${{ steps.extract-current-version.outputs.new-patch-version }}\"" galaxy.yml
-#          git add .
+          git add .
 #          git commit - m "bump up version"
 #          git push
