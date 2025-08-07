@@ -37,8 +37,7 @@ jobs:
                 patch=0
                 echo "new-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
               else
-                major=$((major+1))
-                minor=0
+                minor=$((minor+1))
                 patch=0
                 echo "new-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
               fi
