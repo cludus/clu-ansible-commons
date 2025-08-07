@@ -28,6 +28,7 @@ jobs:
         run: |
               version=$(yq '.version' galaxy.yml)
               echo "current version: $version"
+              echo "current-version=$version" >> $GITHUB_OUTPUT
               echo "release type: ${{ github.event.inputs.release_type }}"
               IFS='.' read -r major minor patch <<< "$version"
               if [ "${{ github.event.inputs.release_type }}" == "patch" ]; then
@@ -47,11 +48,11 @@ jobs:
       - name: GH Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.extract-current-version.outputs.new-version }}
+          tag_name: ${{ steps.extract-current-version.outputs.current-version }}
 
       - name: Bump up version
         run: |
-          yq -i ".version = \"${{ steps.extract-current-version.outputs.new-patch-version }}\"" galaxy.yml
+          yq -i ".version = \"${{ steps.extract-current-version.outputs.new-version }}\"" galaxy.yml
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
