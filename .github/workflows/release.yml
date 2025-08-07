@@ -28,22 +28,25 @@ jobs:
         run: |
               version=$(yq '.version' galaxy.yml)
               echo "current version: $version"
-              echo "current-version=$version" >> $GITHUB_OUTPUT
               echo "release type: ${{ github.event.inputs.release_type }}"
               IFS='.' read -r major minor patch <<< "$version"
               if [ "${{ github.event.inputs.release_type }}" == "patch" ]; then
                 echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
-                patch=$((patch+1))
               elif [ "${{ github.event.inputs.release_type }}" == "minor" ]; then
                 minor=$((minor+1))
                 patch=0
+                echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+                patch=$((patch+1))
               else
                 major=$((major+1))
                 minor=0
                 patch=0
+                echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+                patch=$((patch+1))
               fi
-              echo "new version: $major.$minor.$patch"
+              patch=$((patch+1))
               echo "new-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              echo "new version: $major.$minor.$patch"
 
       - name: GH Release
         uses: softprops/action-gh-release@v2
