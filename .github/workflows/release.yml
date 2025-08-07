@@ -11,14 +11,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Bump up version
+      - name: Extract current version
+        id: extract-current-version
         run: |
               version=$(yq '.version' galaxy.yml)
               IFS='.' read -r major minor patch <<< "$version"
-              patch=$((patch+1))
+              # patch=$((patch+1))
               # yq -i ".version = \"$major.$minor.$patch\"" galaxy.yml
-              echo $major.$minor.$patch
+              echo "new-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
 
 #      - name: Release
 #        uses: softprops/action-gh-release@v2
 #        if: github.ref_type == 'tag'
+
+      - name: Use Output
+        run: |
+          echo "The generated value is: ${{ steps.extract-current-version.outputs.new-version }}"        
