@@ -1,4 +1,4 @@
-name: Main
+name: Release
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run a simple Bash command
+      - name: Bump up version
         run: |
               version=$(yq '.version' galaxy.yml)
               IFS='.' read -r major minor patch <<< "$version"
