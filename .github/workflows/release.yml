@@ -27,7 +27,8 @@ jobs:
         id: extract-current-version
         run: |
               version=$(yq '.version' galaxy.yml)
-              echo "current version: ${{ github.event.inputs.release_type }}"
+              echo "current version: $version"
+              echo "release type: ${{ github.event.inputs.release_type }}"
               IFS='.' read -r major minor patch <<< "$version"
               if [ "${{ github.event.inputs.release_type }}" == "patch" ]; then
                 echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
