@@ -16,7 +16,6 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,15 +28,19 @@ jobs:
         run: |
               version=$(yq '.version' galaxy.yml)
               IFS='.' read -r major minor patch <<< "$version"
-              echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
-              patch=$((patch+1))
-              echo "new-patch-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
-              minor=$((minor+1))
-              patch=0
-              echo "new-minor-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
-              major=$((major+1))
-              minor=0
-              echo "new-major-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              if [ "${{ github.event.inputs.branch_name }}" == "patch" ]; then
+                echo "current-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+                patch=$((patch+1))
+                echo "new-patch-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              elif [ "${{ github.event.inputs.branch_name }}" == "minor" ]; then
+                minor=$((minor+1))
+                patch=0
+                echo "new-minor-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              else
+                major=$((major+1))
+                minor=0
+                echo "new-major-version=$major.$minor.$patch" >> $GITHUB_OUTPUT
+              fi
 
       - name: Release
         uses: softprops/action-gh-release@v2
