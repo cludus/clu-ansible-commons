@@ -130,7 +130,7 @@ All the parameters for the roles can be provided in the inventory, we recommend 
 To rotate wireguard keys use the following script
 
     #!/bin/bash
-    
+
     function genkeys {
       prvkey=$(wg genkey)
       pubkey=$(echo "$prvkey" | wg pubkey)
@@ -143,3 +143,11 @@ To rotate wireguard keys use the following script
       genkeys $host
     done
 
+# Development
+
+To bump up the patch number in the current version run the following command
+
+    version=$(yq '.version' galaxy.yml)
+    IFS='.' read -r major minor patch <<< "$version"
+    patch=$((patch+1))
+    yq -i ".version = \"$major.$minor.$patch\"" galaxy.yml
