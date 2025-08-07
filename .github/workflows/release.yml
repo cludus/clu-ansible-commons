@@ -31,7 +31,8 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v2
-        tag_name: ${{ steps.extract-current-version.outputs.new-patch-version }}
+        with:
+          tag_name: ${{ steps.extract-current-version.outputs.new-patch-version }}
         if: github.ref_type == 'tag'
 
       - name: Bump up version
