@@ -4,7 +4,23 @@
       - curl
       - openssl
       - yq
+      - open-iscsi
+      - nfs-utils
+      - cryptsetup
+      - device-mapper
   become: true
+
+- name: copy mount
+  ansible.builtin.copy:
+    src: shared-mount.start
+    dest: /etc/local.d/shared-mount.start
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: ensure local service is enabled and started at boot
+  ansible.builtin.service:
+    name: local
+    enabled: true
+    state: started
 
 - name: check k3s
   ansible.builtin.command: k3s
