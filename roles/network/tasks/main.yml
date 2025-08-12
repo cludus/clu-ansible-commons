@@ -7,7 +7,7 @@
     group: root
     mode: '0755'
   register: interfacescfg
-  when: ansible_facts['distribution'] == "Alpine"
+  when: ansible_facts['distribution'] == "Alpine" and ifaces is not defined
 
 - name: restart the pc to get the network running
   ansible.builtin.reboot:
