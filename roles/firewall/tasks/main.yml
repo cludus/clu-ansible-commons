@@ -39,7 +39,7 @@
 
 - community.general.ufw:
     rule: allow
-    port: hostvars[inventory_hostname].vpn.listening_port
+    port: "{{ hostvars[inventory_hostname].vpn.listening_port }}"
     proto: udp
   when: hostvars[inventory_hostname].vpn is defined
 
