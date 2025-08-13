@@ -1,4 +1,12 @@
 
+- name: ensure Alpine community repository is enabled
+  ansible.builtin.lineinfile:
+    path: /etc/apk/repositories
+    regexp: '^#\s*http://dl-cdn.alpinelinux.org/alpine/v3.22/community'
+    line: 'http://dl-cdn.alpinelinux.org/alpine/v3.22/community'
+    state: present
+  when: ansible_facts['distribution'] == "Alpine"
+
 - name: install ufw
   ansible.builtin.package:
     name:

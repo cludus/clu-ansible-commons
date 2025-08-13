@@ -28,12 +28,12 @@
   register: service_status
   when: ansible_facts['distribution'] == "Alpine"
 
-- name: stop service
-  ansible.builtin.service:
-    name: wg-quick-wg0
-    enabled: yes
-    state: stopped
-  when: ansible_facts['distribution'] == "Alpine" and service_status.stat.exists
+#- name: stop service
+#  ansible.builtin.service:
+#    name: wg-quick-wg0
+#    enabled: yes
+#    state: stopped
+#  when: ansible_facts['distribution'] == "Alpine" and service_status.stat.exists
 
 - name: create wireguard config
   template:
