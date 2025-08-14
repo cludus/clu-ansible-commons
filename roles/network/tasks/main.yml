@@ -7,8 +7,18 @@
     group: root
     mode: '0755'
   register: interfacescfg
-  when: ansible_facts['distribution'] == "Alpine" and ifaces is not defined
+  when: ansible_facts['distribution'] != "Ubuntu" and hostvars[inventory_hostname].ifaces is defined
+
+- name: setup iptables
+  template:
+    dest: /etc/network/if-up.d/iptables.rules
+    src: iptables-rules.j2
+    owner: root
+    group: root
+    mode: '0755'
+  register: iptableschg
+  when: ansible_facts['distribution'] != "Ubuntu" and hostvars[inventory_hostname].iptables is defined
 
 - name: restart the pc to get the network running
   ansible.builtin.reboot:
-  when: interfacescfg.changed
+  when: interfacescfg.changed or iptableschg.changed

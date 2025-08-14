@@ -1,0 +1,6 @@
+#!/bin/sh
+{% if hostvars[inventory_hostname].iptables is defined %}
+{% for if in hostvars[inventory_hostname].iptables %}
+iptables {{ if.rule }}
+{% endfor %}
+{% endif %}
