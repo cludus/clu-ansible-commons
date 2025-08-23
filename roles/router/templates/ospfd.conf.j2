@@ -5,9 +5,9 @@ hostname {{ inventory_hostname }}
 !
 router ospf
  ospf router-id {{ hostvars[inventory_hostname].ansible_host }}
-{% if hostvars[inventory_hostname].networks is defined %}
-{% for net in hostvars[inventory_hostname].networks %}
- network {{ net.ip }}/{{ net.suffix }} area 0.0.0.0
+{% if hostvars[inventory_hostname].ospf.networks is defined %}
+{% for net in hostvars[inventory_hostname].ospf.networks %}
+ network {{ net.ip }}/{{ net.suffix }} area {{ net.area }}
 {% endfor %}
 {% endif %}
 exit

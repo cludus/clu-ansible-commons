@@ -43,6 +43,14 @@
     group: root
     mode: '0755'
 
+- name: adding bgpd
+  template:
+    dest: /etc/frr/bgpd.conf
+    src: bgpd.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: adding staticd
   template:
     dest: /etc/frr/staticd.conf
