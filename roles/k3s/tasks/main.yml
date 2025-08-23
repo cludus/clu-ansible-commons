@@ -15,7 +15,13 @@
   ansible.builtin.copy:
     src: shared-mount.start
     dest: /etc/local.d/shared-mount.start
+    mode: '0700'
   when: ansible_facts['distribution'] == "Alpine"
+  register: shared-mount
+
+- name: restart on resolv.conf added
+  ansible.builtin.reboot:
+  when: shared-mount.changed
 
 - name: ensure local service is enabled and started at boot
   ansible.builtin.service:
