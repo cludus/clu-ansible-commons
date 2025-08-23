@@ -19,7 +19,7 @@
   when: ansible_facts['distribution'] == "Alpine"
   register: shared_mount
 
-- name: restart on resolv.conf added
+- name: restart on shared-mount changed
   ansible.builtin.reboot:
   when: shared_mount.changed
 
