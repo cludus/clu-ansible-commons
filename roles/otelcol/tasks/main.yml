@@ -7,13 +7,12 @@
 - name: unarchive a tar.gz file
   ansible.builtin.unarchive:
     src: "/tmp/otelcol.tar.gz"
-    dest: "/tmp/otelcol"
+    dest: "/tmp"
     remote_src: yes
     creates: "/tmp/otelcol"
-    strip_components: 1
 
 - name: copy otelcol to bin folder
   ansible.builtin.copy:
-    src: /tmp/otelcol/otelcol
+    src: /tmp/otelcol
     dest: /usr/bin/otelcol
     remote_src: yes
