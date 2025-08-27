@@ -1,0 +1,19 @@
+- name: download a file from a URL
+  ansible.builtin.get_url:
+    url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.133.0/otelcol_0.133.0_linux_amd64.tar.gz"
+    dest: "/tmp/otelcol.tar.gz"
+    mode: '0644' # Optional: set file permissions
+
+- name: unarchive a tar.gz file
+  ansible.builtin.unarchive:
+    src: "/tmp/otelcol.tar.gz"  # Path to the archive on the Ansible control machine
+    dest: "/tmp/otelcol"        # Destination directory on the remote host
+    remote_src: no              # Set to 'yes' if the archive is already on the remote host
+    creates: "/tmp/otelcol" # Optional: prevents re-extraction if target exists
+    strip_components: 1                # Optional: removes the first directory level from the extracted path
+
+- name: copy otelcol to bin folder
+  ansible.builtin.copy:
+    src: /tmp/otelcol/otelcol
+    dest: /usr/bin/otelcol
+    remote_src: yes
