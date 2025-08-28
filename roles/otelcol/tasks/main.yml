@@ -24,6 +24,7 @@
     owner: root
     group: root
     mode: '0755'
+  when: hostvars[inventory_hostname].otelcol is defined
 
 - name: otelcol service
   template:
@@ -32,11 +33,11 @@
     owner: root
     group: root
     mode: '0700'
-  when: ansible_facts['distribution'] == "Alpine"
+  when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
 
 - name: start service alpine
   ansible.builtin.service:
     name: otelcol-svc
     enabled: yes
     state: started
-  when: ansible_facts['distribution'] == "Alpine"
+  when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
