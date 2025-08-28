@@ -16,3 +16,27 @@
     src: /tmp/otelcol
     dest: /usr/bin/otelcol
     remote_src: yes
+
+- name: add otelcol config
+  template:
+    dest: /root/otelcol.yml
+    src: otelcol.yml.j2
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: otelcol service
+  template:
+    dest: /etc/init.d/otelcol-svc
+    src: otelcol-svc.j2
+    owner: root
+    group: root
+    mode: '0700'
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: start service alpine
+  ansible.builtin.service:
+    name: otelcol-svc
+    enabled: yes
+    state: started
+  when: ansible_facts['distribution'] == "Alpine"

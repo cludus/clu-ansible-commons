@@ -1,0 +1,32 @@
+receivers:
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu:
+      disk:
+      load:
+      filesystem:
+      memory:
+      network:
+      paging:
+      processes:
+      process:
+      system:
+
+processors:
+  batch:
+
+exporters:
+  kafka:
+    protocol_version: 2.0.0
+    brokers: {{ hostvars[inventory_hostname].otelcol.kafka.brokers }}
+    topic: {{ hostvars[inventory_hostname].otelcol.kafka.topic }}
+    metrics:
+      encoding: otlp_json
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [batch]
+      exporters: [kafka]

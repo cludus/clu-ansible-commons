@@ -1,0 +1,8 @@
+#!/sbin/openrc-run
+description="OpenTelemetry Collector"
+start() {
+  nohup otelcol --config=/root/otelcol.yml &
+}
+stop() {
+  pkill -f otelcol
+}
