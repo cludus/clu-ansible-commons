@@ -59,13 +59,13 @@
     group: root
     mode: '0755'
 
-- name: adding ospfd in frr
-  template:
-    dest: /etc/frr/frr.conf
-    src: frr.conf.j2
-    owner: root
-    group: root
-    mode: '0755'
+#- name: adding ospfd in frr
+#  template:
+#    dest: /etc/frr/frr.conf
+#    src: frr.conf.j2
+#    owner: root
+#    group: root
+#    mode: '0755'
 
 - name: restart service frr
   ansible.builtin.service:
