@@ -5,9 +5,23 @@ hostname {{ inventory_hostname }}
 !
 router ospf
  ospf router-id {{ hostvars[inventory_hostname].ansible_host }}
-{% if hostvars[inventory_hostname].networks is defined %}
-{% for net in hostvars[inventory_hostname].networks %}
+{% if hostvars[inventory_hostname].ospf.networks is defined %}
+{% for net in hostvars[inventory_hostname].ospf.networks %}
  network {{ net.ip }}/{{ net.suffix }} area 0.0.0.0
+{% endfor %}
+{% endif %}
+exit
+!
+router bgp {{ hostvars[inventory_hostname].bgp.asn }}
+ bgp router-id {{ hostvars[inventory_hostname].ansible_host }}
+{% if hostvars[inventory_hostname].bgp.neighbors is defined %}
+{% for nei in hostvars[inventory_hostname].bgp.neighbors %}
+ neighbor {{ nei.ip }} remote-as {{ nei.remote_as }}
+{% endfor %}
+{% endif %}
+{% if hostvars[inventory_hostname].bgp.networks is defined %}
+{% for net in hostvars[inventory_hostname].bgp.networks %}
+ network {{ net.ip }}/{{ net.suffix }}
 {% endfor %}
 {% endif %}
 exit
