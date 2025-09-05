@@ -1,8 +1,25 @@
+- name: ensure Alpine community repository is enabled
+  ansible.builtin.lineinfile:
+    path: /etc/apk/repositories
+    regexp: '^#\s*http://dl-cdn.alpinelinux.org/alpine/v3.22/community'
+    line: 'http://dl-cdn.alpinelinux.org/alpine/v3.22/community'
+    state: present
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: get root password
+  command: "{{ hostvars[inventory_hostname].users.root_password }}"
+  register: root_pass
+  become: false
+  delegate_to: localhost
+
+- name: Display a variable
+  debug:
+    var: root_pass
 
 - name: set root password
   ansible.builtin.user:
     name: root
-    password: "{{ users.root_password | string | password_hash('sha512') }}"
+    password: "{{ root_pass.stdout | string | password_hash('sha512') }}"
 
 - name: install cron ubuntu
   ansible.builtin.package:

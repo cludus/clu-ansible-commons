@@ -36,14 +36,17 @@
 #  when: ansible_facts['distribution'] == "Alpine" and service_status.stat.exists
 
 - name: get private key
-  command: {{ hostvars[inventory_hostname].vpn.private_key }}
+  command: "{{ hostvars[inventory_hostname].vpn.private_key }}"
   register: private_key
+  become: false
   delegate_to: localhost
 
 - name: get public key
-  command: {{ hostvars[inventory_hostname].vpn.public_key }}
+  command: "{{ hostvars[item.name].vpn.public_key }}"
   register: public_key
+  become: false
   delegate_to: localhost
+  loop: "{{ hostvars[inventory_hostname].vpn.peers }}"
 
 - name: create wireguard config
   template:
