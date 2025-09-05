@@ -48,6 +48,10 @@
   delegate_to: localhost
   loop: "{{ hostvars[inventory_hostname].vpn.peers }}"
 
+#- name: display a variable
+#  debug:
+#    var: public_key
+
 - name: create wireguard config
   template:
     dest: /etc/wireguard/wg0.conf

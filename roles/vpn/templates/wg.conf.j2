@@ -6,13 +6,13 @@ PrivateKey = {{ private_key.stdout }}
 SaveConfig = false
 
 {% if hostvars[inventory_hostname].vpn.peers is defined %}
-{% for item in hostvars[inventory_hostname].vpn.peers %}
+{% for res in public_key.results %}
 [Peer]
-PublicKey = {{ public_key.results[item.name].stdout }}
-AllowedIPs = {{ hostvars[item.name].vpn.address }}{% if item.allowedIps is defined %}, {{ item.allowedIps }}
+PublicKey = {{ res.stdout }}
+AllowedIPs = {{ hostvars[res.item.name].vpn.address }}{% if res.item.allowedIps is defined %}, {{ res.item.allowedIps }}
 {% endif %}
-{% if hostvars[item.name].vpn.endpoint is defined %}
-Endpoint = {{ hostvars[item.name].vpn.endpoint }}:{{ hostvars[item.name].vpn.listening_port }}
+{% if hostvars[res.item.name].vpn.endpoint is defined %}
+Endpoint = {{ hostvars[res.item.name].vpn.endpoint }}:{{ hostvars[res.item.name].vpn.listening_port }}
 {% endif %}
 PersistentKeepalive = 30
 
