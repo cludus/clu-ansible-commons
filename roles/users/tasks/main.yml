@@ -12,9 +12,9 @@
   become: false
   delegate_to: localhost
 
-- name: Display a variable
-  debug:
-    var: root_pass
+#- name: Display a variable
+#  debug:
+#    var: root_pass
 
 - name: set root password
   ansible.builtin.user:
