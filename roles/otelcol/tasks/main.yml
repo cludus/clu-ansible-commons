@@ -2,6 +2,9 @@
   ansible.builtin.package:
     name:
       - unzip
+      - zip
+      - tar
+      - gzip
   become: true
 
 - name: download a file from a URL
