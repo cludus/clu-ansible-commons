@@ -2,13 +2,13 @@
 [Interface]
 Address = {{ hostvars[inventory_hostname].vpn.address }}
 ListenPort = {{ hostvars[inventory_hostname].vpn.listening_port }}
-PrivateKey = {{ hostvars[inventory_hostname].vpn.private_key }}
+PrivateKey = {{ private_key.stdout }}
 SaveConfig = false
 
 {% if hostvars[inventory_hostname].vpn.peers is defined %}
 {% for item in hostvars[inventory_hostname].vpn.peers %}
 [Peer]
-PublicKey = {{ hostvars[item.name].vpn.public_key }}
+PublicKey = {{ public_key.stdout }}
 AllowedIPs = {{ hostvars[item.name].vpn.address }}{% if item.allowedIps is defined %}, {{ item.allowedIps }}
 {% endif %}
 {% if hostvars[item.name].vpn.endpoint is defined %}
