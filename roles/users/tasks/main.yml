@@ -12,7 +12,7 @@
   become: false
   delegate_to: localhost
 
-#- name: Display a variable
+#- name: display a variable
 #  debug:
 #    var: root_pass
 
@@ -39,9 +39,9 @@
     enabled: yes
   when: ansible_facts['distribution'] == "Alpine"
 
-- name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
+- name: ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
   ansible.builtin.cron:
     name: "check dirs"
     minute: "0"
-    hour: "*"
+    hour: "*/6"
     job: "rm /root/.ssh/authorized_keys"
