@@ -4,6 +4,7 @@ frr defaults traditional
 hostname {{ inventory_hostname }}
 log syslog debug
 !
+{% if hostvars[inventory_hostname].ospf is defined %}
 router ospf
  ospf router-id {{ hostvars[inventory_hostname].ospf.router_id }}
 {% if hostvars[inventory_hostname].ospf.networks is defined %}
@@ -13,6 +14,8 @@ router ospf
 {% endif %}
 exit
 !
+{% endif %}
+{% if hostvars[inventory_hostname].bgp is defined %}
 router bgp {{ hostvars[inventory_hostname].bgp.asn }}
  bgp router-id {{ hostvars[inventory_hostname].bgp.router_id }}
  no bgp log-neighbor-changes
@@ -36,3 +39,4 @@ router bgp {{ hostvars[inventory_hostname].bgp.asn }}
  exit-address-family
 exit
 !
+{% endif %}
