@@ -52,6 +52,16 @@
   when: hostvars[inventory_hostname].vpn is defined
 
 - community.general.ufw:
+    rule: allow
+    port: "89"
+  when: hostvars[inventory_hostname].ospf is defined
+
+- community.general.ufw:
+    rule: allow
+    port: "179"
+  when: hostvars[inventory_hostname].bgp is defined
+
+- community.general.ufw:
     state: enabled
 
 - name: add ufw service
