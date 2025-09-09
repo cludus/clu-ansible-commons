@@ -14,7 +14,7 @@ router ospf
 exit
 !
 router bgp {{ hostvars[inventory_hostname].bgp.asn }}
- bgp router-id {{ hostvars[inventory_hostname].ansible_host }}
+ bgp router-id {{ hostvars[inventory_hostname].bgp.router_id }}
  no bgp log-neighbor-changes
  no bgp ebgp-requires-policy
  no bgp default show-hostname
