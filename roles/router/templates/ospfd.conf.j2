@@ -5,7 +5,7 @@ hostname {{ inventory_hostname }}
 log syslog debug
 !
 router ospf
- ospf router-id {{ hostvars[inventory_hostname].ansible_host }}
+ ospf router-id {{ hostvars[inventory_hostname].ospf.router_id }}
 {% if hostvars[inventory_hostname].ospf.networks is defined %}
 {% for net in hostvars[inventory_hostname].ospf.networks %}
  network {{ net.ip }}/{{ net.suffix }} area {{ net.area }}
