@@ -19,53 +19,53 @@
     enabled: yes
     state: stopped
 
-- name: adding daemons
-  template:
-    dest: /etc/frr/daemons
-    src: daemons.j2
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: adding zebra
-  template:
-    dest: /etc/frr/zebra.conf
-    src: zebra.conf.j2
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: adding ospfd
-  template:
-    dest: /etc/frr/ospfd.conf
-    src: ospfd.conf.j2
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: adding bgpd
-  template:
-    dest: /etc/frr/bgpd.conf
-    src: bgpd.conf.j2
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: adding staticd
-  template:
-    dest: /etc/frr/staticd.conf
-    src: staticd.conf.j2
-    owner: root
-    group: root
-    mode: '0755'
-
-#- name: adding ospfd in frr
+#- name: adding daemons
 #  template:
-#    dest: /etc/frr/frr.conf
-#    src: frr.conf.j2
+#    dest: /etc/frr/daemons
+#    src: daemons.j2
 #    owner: root
 #    group: root
 #    mode: '0755'
+#
+#- name: adding zebra
+#  template:
+#    dest: /etc/frr/zebra.conf
+#    src: zebra.conf.j2
+#    owner: root
+#    group: root
+#    mode: '0755'
+#
+#- name: adding ospfd
+#  template:
+#    dest: /etc/frr/ospfd.conf
+#    src: ospfd.conf.j2
+#    owner: root
+#    group: root
+#    mode: '0755'
+#
+#- name: adding bgpd
+#  template:
+#    dest: /etc/frr/bgpd.conf
+#    src: bgpd.conf.j2
+#    owner: root
+#    group: root
+#    mode: '0755'
+#
+#- name: adding staticd
+#  template:
+#    dest: /etc/frr/staticd.conf
+#    src: staticd.conf.j2
+#    owner: root
+#    group: root
+#    mode: '0755'
+
+- name: adding ospfd in frr
+  template:
+    dest: /etc/frr/frr.conf
+    src: frr.conf.j2
+    owner: root
+    group: root
+    mode: '0755'
 
 - name: restart service frr
   ansible.builtin.service:
