@@ -19,14 +19,14 @@
     enabled: yes
     state: stopped
 
-#- name: adding daemons
-#  template:
-#    dest: /etc/frr/daemons
-#    src: daemons.j2
-#    owner: root
-#    group: root
-#    mode: '0755'
-#
+- name: adding daemons
+  template:
+    dest: /etc/frr/daemons
+    src: daemons.j2
+    owner: root
+    group: root
+    mode: '0755'
+
 #- name: adding zebra
 #  template:
 #    dest: /etc/frr/zebra.conf
