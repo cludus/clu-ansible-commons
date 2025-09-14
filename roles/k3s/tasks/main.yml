@@ -54,7 +54,7 @@
 
 - name: upload ssl crt
   copy:
-    src: "{{ hostvars[inventory_hostname].k3s.root_ca_path }}"
+    src: "{{ inventory_dir }}/{{ hostvars[inventory_hostname].k3s.root_ca_path }}"
     dest: /var/lib/rancher/k3s/server/tls/root-ca.pem
     decrypt: yes
     mode: 0600
@@ -62,7 +62,7 @@
 
 - name: upload ssl key
   copy:
-    src: "{{ hostvars[inventory_hostname].k3s.root_ca_key_path }}"
+    src: "{{ inventory_dir }}/{{ hostvars[inventory_hostname].k3s.root_ca_key_path }}"
     dest: /var/lib/rancher/k3s/server/tls/root-ca.key
     decrypt: yes
     mode: 0600
