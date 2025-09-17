@@ -134,6 +134,6 @@
 - name: storing in a path relative to the playbook
   ansible.builtin.fetch:
     src: /etc/rancher/k3s/config.yaml
-    dest: "{{ hostvars[inventory_hostname].k3s.config_dir }}/{{ hostvars[inventory_hostname].k3s.cluster_name }}.yml"
+    dest: "{{ hostvars[inventory_hostname].k3s.config_file }}"
     flat: yes
   when: hostvars[inventory_hostname].k3s.node_type == "master"
