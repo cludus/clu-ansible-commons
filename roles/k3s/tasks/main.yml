@@ -129,9 +129,11 @@
 - name: edit cluster configuration
   ansible.builtin.shell: |
     yq '.clusters[0].cluster.server = "https://{{ hostvars[inventory_hostname].k3s.hostname }}:6443"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
+    yq '.clusters[0].name = "{{ hostvars[inventory_hostname].k3s.cluster_name }}"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
     yq '.contexts[0].context.cluster = "{{ hostvars[inventory_hostname].k3s.cluster_name }}"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
     yq '.contexts[0].context.user = "{{ hostvars[inventory_hostname].k3s.cluster_name }}_user"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
     yq '.contexts[0].name = "{{ hostvars[inventory_hostname].k3s.cluster_name }}_context"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
+    yq '.users[0].name = "{{ hostvars[inventory_hostname].k3s.cluster_name }}_user"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
     yq '.current-context = "{{ hostvars[inventory_hostname].k3s.cluster_name }}_context"' /etc/rancher/k3s/k3s.yaml > /etc/rancher/k3s/config.yaml
   when: hostvars[inventory_hostname].k3s.node_type == "master"
 
