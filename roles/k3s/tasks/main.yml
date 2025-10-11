@@ -29,6 +29,20 @@
     enabled: true
     state: started
 
+- name: Add or modify nofile hard limit for all users
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nofile
+    value: 65536
+
+- name: Add or modify nofile soft limit for all users
+  pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nofile
+    value: 65536
+
 - name: check k3s
   ansible.builtin.command: k3s
   ignore_errors: true
