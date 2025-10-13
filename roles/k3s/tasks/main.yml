@@ -43,6 +43,15 @@
     limit_item: nofile
     value: 65536
 
+- name: Add nofile limit to rc.conf
+  ansible.builtin.lineinfile:
+    path: /etc/rc.conf
+    line: 'rc_ulimit="-n 65356"'
+    state: present
+    create: false # Optional: create the file if it doesn't exist
+    backup: false # Optional: create a backup of the original file before modification
+  when: ansible_facts['distribution'] == "Alpine"
+
 - name: check k3s
   ansible.builtin.command: k3s
   ignore_errors: true
