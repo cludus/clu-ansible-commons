@@ -48,8 +48,8 @@
     path: /etc/rc.conf
     line: 'rc_ulimit="-n 65356"'
     state: present
-    create: false # Optional: create the file if it doesn't exist
-    backup: false # Optional: create a backup of the original file before modification
+    create: false
+    backup: false
   when: ansible_facts['distribution'] == "Alpine"
 
 - name: check k3s
