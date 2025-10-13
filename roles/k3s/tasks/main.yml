@@ -46,7 +46,7 @@
 - name: Add nofile limit to rc.conf
   ansible.builtin.lineinfile:
     path: /etc/rc.conf
-    line: 'rc_ulimit="-n 65356"'
+    line: 'rc_ulimit="-n 65556"'
     state: present
     create: false
     backup: false
