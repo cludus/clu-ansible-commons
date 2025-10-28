@@ -17,16 +17,22 @@ processors:
   batch:
 
 exporters:
+{% if hostvars[inventory_hostname].otelcol.kafka is defined %}
   kafka:
     protocol_version: 2.0.0
     brokers: {{ hostvars[inventory_hostname].otelcol.kafka.brokers }}
     topic: {{ hostvars[inventory_hostname].otelcol.kafka.topic }}
     metrics:
       encoding: otlp_json
+{% endif %}
+{% if hostvars[inventory_hostname].otelcol.prometheus is defined %}
+  prometheus:
+    endpoint: {{ hostvars[inventory_hostname].otelcol.prometheus.endpoint }}
+{% endif %}
 
 service:
   pipelines:
     metrics:
       receivers: [hostmetrics]
       processors: [batch]
-      exporters: [kafka]
+      exporters: [{% if hostvars[inventory_hostname].otelcol.kafka is defined %}kafka{% if hostvars[inventory_hostname].otelcol.prometheus is defined %},{% endif %}{% endif %} {% if hostvars[inventory_hostname].otelcol.prometheus is defined %}prometheus{% endif %}]
