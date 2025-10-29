@@ -1,8 +1,12 @@
 #!/sbin/openrc-run
+
+command="/usr/bin/otelcol"
+command_args="--config=/root/otelcol.yml"
+command_user="root:root"
 description="OpenTelemetry Collector"
-start() {
-  nohup otelcol --config=/root/otelcol.yml &
-}
-stop() {
-  pkill -f otelcol
+pidfile="/var/run/otelcol.pid"
+
+depend() {
+    need localmount
+    use logger
 }
