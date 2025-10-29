@@ -22,6 +22,10 @@ exporters:
 {% if hostvars[inventory_hostname].otelcol.prometheus is defined %}
   prometheusremotewrite:
     endpoint: {{ hostvars[inventory_hostname].otelcol.prometheus.endpoint }}
+    external_labels:
+      {% for key, value in hostvars[inventory_hostname].otelcol.prometheus.labels.items() %}
+      {{ key }}: {{ value }}
+      {% endfor %}
 {% endif %}
 
 service:
