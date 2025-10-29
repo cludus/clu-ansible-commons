@@ -1,8 +1,8 @@
 #!/sbin/openrc-run
 
 command="/usr/bin/otelcol"
-command_args="--config=/root/otelcol.yml"
-command_user="root:root"
+command_args="--config={{ hostvars[inventory_hostname].otelcol.work_dir }}/otelcol.yml"
+command_user="{{ hostvars[inventory_hostname].otelcol.user }}:{{ hostvars[inventory_hostname].otelcol.user }}"
 description="OpenTelemetry Collector"
 pidfile="/var/run/otelcol.pid"
 

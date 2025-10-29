@@ -5,10 +5,10 @@ Description=OpenTelemetry Collector
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/otelcol --config=/root/otelcol.yml
-WorkingDirectory=/root
+ExecStart=/usr/bin/otelcol --config={{ hostvars[inventory_hostname].otelcol.work_dir }}/otelcol.yml
+WorkingDirectory={{ hostvars[inventory_hostname].otelcol.work_dir }}
 Restart=on-failure
-User=root
+User={{ hostvars[inventory_hostname].otelcol.user }}
 
 [Install]
 WantedBy=multi-user.target
