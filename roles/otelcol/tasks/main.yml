@@ -51,3 +51,10 @@
     enabled: yes
     state: started
   when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
+
+- name: restart service alpine
+  ansible.builtin.service:
+    name: otelcol-svc
+    enabled: yes
+    state: restarted
+  when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined

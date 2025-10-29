@@ -4,14 +4,8 @@ receivers:
     scrapers:
       cpu:
       disk:
-      load:
-      filesystem:
       memory:
       network:
-      paging:
-      processes:
-      process:
-      system:
 
 processors:
   batch:
@@ -26,7 +20,7 @@ exporters:
       encoding: otlp_json
 {% endif %}
 {% if hostvars[inventory_hostname].otelcol.prometheus is defined %}
-  prometheus:
+  prometheusremotewrite:
     endpoint: {{ hostvars[inventory_hostname].otelcol.prometheus.endpoint }}
 {% endif %}
 
@@ -35,4 +29,4 @@ service:
     metrics:
       receivers: [hostmetrics]
       processors: [batch]
-      exporters: [{% if hostvars[inventory_hostname].otelcol.kafka is defined %}kafka{% if hostvars[inventory_hostname].otelcol.prometheus is defined %},{% endif %}{% endif %} {% if hostvars[inventory_hostname].otelcol.prometheus is defined %}prometheus{% endif %}]
+      exporters: [{% if hostvars[inventory_hostname].otelcol.kafka is defined %}kafka{% if hostvars[inventory_hostname].otelcol.prometheus is defined %},{% endif %}{% endif %} {% if hostvars[inventory_hostname].otelcol.prometheus is defined %}prometheusremotewrite{% endif %}]
