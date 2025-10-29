@@ -9,7 +9,7 @@
 
 - name: download a file from a URL
   ansible.builtin.get_url:
-    url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.133.0/otelcol_0.133.0_linux_amd64.tar.gz"
+    url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.138.0/otelcol_0.138.0_linux_amd64.tar.gz"
     dest: "/tmp/otelcol.tar.gz"
     mode: '0644'
 
