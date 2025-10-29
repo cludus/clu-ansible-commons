@@ -1,0 +1,14 @@
+# /etc/systemd/system/otelcol.service
+
+[Unit]
+Description=OpenTelemetry Collector
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/otelcol --config=/root/otelcol.yml
+WorkingDirectory=/root
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

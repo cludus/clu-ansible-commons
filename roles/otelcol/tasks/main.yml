@@ -36,7 +36,7 @@
     mode: '0755'
   when: hostvars[inventory_hostname].otelcol is defined
 
-- name: otelcol service
+- name: otelcol service rc
   template:
     dest: /etc/init.d/otelcol-svc
     src: otelcol-svc.j2
@@ -52,9 +52,18 @@
     state: started
   when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
 
-- name: restart service alpine
+- name: otelcol service systemctl
+  template:
+    dest: /etc/systemd/system/otelcol.service
+    src: otelcol.service.j2
+    owner: root
+    group: root
+    mode: '0700'
+  when: ansible_facts['distribution'] != "Alpine" and hostvars[inventory_hostname].otelcol is defined
+
+- name: start service systemctl
   ansible.builtin.service:
-    name: otelcol-svc
+    name: otelcol
     enabled: yes
-    state: restarted
-  when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
+    state: started
+  when: ansible_facts['distribution'] != "Alpine" and hostvars[inventory_hostname].otelcol is defined
