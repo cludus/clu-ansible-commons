@@ -29,7 +29,7 @@
 
 - name: add otelcol config
   template:
-    dest: {{ hostvars[inventory_hostname].otelcol.work_dir }}/otelcol.yml
+    dest: "{{ hostvars[inventory_hostname].otelcol.work_dir }}/otelcol.yml"
     src: otelcol.yml.j2
     owner: root
     group: root
