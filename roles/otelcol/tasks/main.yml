@@ -25,7 +25,7 @@
     src: /tmp/otelcol
     dest: /usr/bin/otelcol
     remote_src: yes
-    mode: '0777
+    mode: '0777'
 
 - name: add otelcol config
   template:
