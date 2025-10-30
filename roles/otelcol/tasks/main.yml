@@ -31,8 +31,8 @@
   template:
     dest: "{{ hostvars[inventory_hostname].otelcol.work_dir }}/otelcol.yml"
     src: otelcol.yml.j2
-    owner: root
-    group: root
+    owner: "{{ hostvars[inventory_hostname].otelcol.user }}"
+    group: "{{ hostvars[inventory_hostname].otelcol.user }}"
     mode: '0755'
   when: hostvars[inventory_hostname].otelcol is defined
 
@@ -40,8 +40,8 @@
   template:
     dest: /etc/init.d/otelcol-svc
     src: otelcol-svc.j2
-    owner: root
-    group: root
+    owner: "{{ hostvars[inventory_hostname].otelcol.user }}"
+    group: "{{ hostvars[inventory_hostname].otelcol.user }}"
     mode: '0700'
   when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
 
