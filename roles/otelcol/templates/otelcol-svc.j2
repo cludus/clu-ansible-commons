@@ -5,6 +5,7 @@ command_args="--config={{ hostvars[inventory_hostname].otelcol.work_dir }}/otelc
 command_user="{{ hostvars[inventory_hostname].otelcol.user }}:{{ hostvars[inventory_hostname].otelcol.user }}"
 description="OpenTelemetry Collector"
 pidfile="/var/run/otelcol.pid"
+command_background="yes"
 
 depend() {
     need localmount
