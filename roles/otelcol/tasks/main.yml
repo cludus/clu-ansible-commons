@@ -25,24 +25,24 @@
     src: /tmp/otelcol
     dest: /usr/bin/otelcol
     remote_src: yes
-    mode: '0755'
+    mode: '0777
 
 - name: add otelcol config
   template:
     dest: "{{ hostvars[inventory_hostname].otelcol.work_dir }}/otelcol.yml"
     src: otelcol.yml.j2
-    owner: "{{ hostvars[inventory_hostname].otelcol.user }}"
-    group: "{{ hostvars[inventory_hostname].otelcol.user }}"
-    mode: '0755'
+    owner: root
+    group: root
+    mode: '0666'
   when: hostvars[inventory_hostname].otelcol is defined
 
 - name: otelcol service rc
   template:
     dest: /etc/init.d/otelcol-svc
     src: otelcol-svc.j2
-    owner: "{{ hostvars[inventory_hostname].otelcol.user }}"
-    group: "{{ hostvars[inventory_hostname].otelcol.user }}"
-    mode: '0700'
+    owner: root
+    group: root
+    mode: '0777'
   when: ansible_facts['distribution'] == "Alpine" and hostvars[inventory_hostname].otelcol is defined
 
 - name: start service alpine
@@ -58,7 +58,7 @@
     src: otelcol.service.j2
     owner: root
     group: root
-    mode: '0700'
+    mode: '0777'
   when: ansible_facts['distribution'] != "Alpine" and hostvars[inventory_hostname].otelcol is defined
 
 - name: start service systemctl
