@@ -1,7 +1,8 @@
 - name: install unzip
   ansible.builtin.package:
+    update_cache: yes
     name:
-#      - unzip
+      - unzip
       - zip
       - tar
       - gzip
