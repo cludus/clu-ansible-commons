@@ -25,12 +25,12 @@
 
 - name: restart network
   service:
-    name: network
+    name: networking
     state: restarted
   when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: restart network
   service:
-    name: networking
+    name: network
     state: restarted
   when: ansible_facts['distribution'] != "Ubuntu"

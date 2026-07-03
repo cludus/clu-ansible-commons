@@ -1,4 +1,4 @@
-- name: install curl and openssl
+- name: install dependencies alpine
   ansible.builtin.package:
     name:
       - curl
@@ -10,6 +10,20 @@
       - device-mapper
       - findmnt
   become: true
+  when: ansible_facts['distribution'] == "Alpine"
+
+- name: install dependencies ubuntu
+  ansible.builtin.package:
+    name:
+      - curl
+      - openssl
+      - yq
+      - open-iscsi
+      - nfs-common
+      - cryptsetup
+    update_cache: true
+  become: true
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: copy mount
   ansible.builtin.copy:
@@ -28,6 +42,7 @@
     name: local
     enabled: true
     state: started
+  when: ansible_facts['distribution'] == "Alpine"
 
 - name: Add or modify nofile hard limit for all users
   pam_limits:
