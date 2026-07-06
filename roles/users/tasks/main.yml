@@ -6,7 +6,7 @@
     state: present
   when: ansible_facts['distribution'] == "Alpine"
 
-- name: get root password
+- name: get root password from vault
   command: "{{ hostvars[inventory_hostname].users.root_password }}"
   register: root_pass
   become: false
