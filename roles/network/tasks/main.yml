@@ -33,4 +33,4 @@
   service:
     name: network
     state: restarted
-  when: ansible_facts['distribution'] != "Ubuntu"
+  when: ansible_facts['distribution'] == "Ubuntu"
